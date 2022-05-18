@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 정보 수정</title>
+    <style>
+        
+    </style>
+    <script>
+        
+    </script>
+</head>
+<body>
+	<!-- layout -->
+    <div layout:fragment="content">
+	    <form th:action="@{'/claco/post/edit/' + ${classDto.cindex}}" method="post">
+	        <input type="hidden" name="_method" value="put" />
+	        <input type="hidden" name="aindex" th:value="${classDto.cindex}" />
+	        강의명 : <input type="text" name="name" th:value="${classDto.name}"> <br>
+	       	분야 : <input type="text" name="category" th:value="${classDto.category}" />
+	       	금액 : <input type="text" name="price" th:value="${classDto.price}" />
+	       	강의기간(시작) : <input type="text" name="startperiod" th:value="${classDto.startperiod}" />
+	       	강의기간(끝) : <input type="text" name="endperiod" th:value="${classDto.endperiod}" />
+	       	정보 : <textarea name="info" th:text="${classDto.info}"></textarea> <br>
+	        <input type="hidden" name="score" th:value="${classDto.score}" />
+	        <input type="submit" value="수정">
+	        <a th:href="@{/claco/post/{claccDto.cindex}}"><button>취소</button></a>
+	    </form>
+	<!-- layout end-->
+	</div>
+</body>
+</html>

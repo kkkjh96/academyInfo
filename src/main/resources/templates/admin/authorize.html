@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+<meta charset="UTF-8">
+<title>권한 관리 페이지</title>
+</head>
+<body style="text-align:center">
+	<div layout:fragment="content">
+		<h1>권한 관리 페이지 입니다.</h1>
+		<hr>
+	<h1>전체 강의 목록입니다. </h1>
+		<table>
+	        <thead>
+	            <!-- 게시판 분류-->
+	            <tr>
+	                <th style="width:10%">번호</th>
+	                <th style="width:10%">학원명</th>
+	                <th style="width:15%">강의명</th>
+	                <th style="width:10%">분야</th>
+	                <th style="width:10%">가격</th>
+	                <th style="width:5%">평점</th>
+	                <th style="width:10%">시작일</th>
+	                <th style="width:10%">종료일</th>
+	                <th style="width:10%">인증상태</th>
+	                <th style="width:10%"></th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        <!-- Contents -->
+	        <!-- 반복문으로 게시판 글을 반복해서 보여줌-->
+		    	<tr th:each="classes : ${classList}">
+					<td>
+						<span th:text="${classes.cindex}"></span>
+					</td>
+					<td>
+			            <a th:href="@{'/academy/post/' + ${classes.aindex}}">
+			                <span th:text="${classes.aname}"></span>
+			            </a>
+		            </td>
+		            <td>
+			            <a th:href="@{'/claco/post/' + ${classes.cindex}}">
+			                <span th:text="${classes.name}"></span>
+			            </a>
+		            </td>
+		            <td>
+		                <span th:text="${classes.category}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${#numbers.formatInteger(classes.price, 1)}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${#numbers.formatDecimal(classes.score, 1, 2)}"></span>
+		            </td>
+		            
+		            <td>
+		                <span th:text="${classes.startperiod}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${classes.endperiod}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${classes.status}"></span>
+		            </td>
+		            <td>
+		            	<!-- <input type="button" value="권한허용" th:if="${review.status} != 'approval'" >  -->
+		            	<form th:action="@{/admin/edit/claco}" method="post">
+		            		<input type="hidden" name="_method" value="put" />
+		            		  <input type="hidden" name="cindex" th:value="${classes.cindex}" />
+		            		<button type="submit" name="status" th:if="${classes.status} != 'approval'">권한허용</button>
+		            	</form>
+		            </td>
+		        </tr>
+	        </tbody>
+	    </table>
+	    <hr>
+		 <h1>전체 수강후기 목록입니다.</h1>
+	   <table>
+	        <thead>
+	            <!-- 게시판 분류-->
+	            <tr>
+	            	<th style="width:20%">강의명</th>
+	                <th style="width:30%">수강후기</th>
+	                <th style="width:10%">평점</th>
+	                <th style="width:10%">작성일</th>
+	                <th style="width:10%">작성자</th>
+	                <th style="width:10%">인증상태</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        <!-- Contents -->
+	        <!-- 반복문으로 수강후기를 반복해서 보여줌-->
+		    	<tr th:each="review : ${reviewList}">
+		            <td>
+			            <!--<a th:href="@{'/freeboard/post/' + ${comment.bindex}}">-->
+			                <span th:text="${review.cname}"></span>
+			            <!--</a>-->
+		            </td>
+		            <td>
+		                <span th:text="${review.contents}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${#numbers.formatDecimal(review.score, 1, 2)}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${review.mid}"></span>
+		            </td>
+		             <td>
+		                <span th:text="${review.status}"></span>
+		            </td>
+		            <td>
+		            	<!-- <input type="button" value="권한허용" th:if="${review.status} != 'approval'" >  -->
+		            	<form th:action="@{/admin/edit/review}" method="post">
+		            		<input type="hidden" name="_method" value="put" />
+		            		  <input type="hidden" name="rvindex" th:value="${review.rvindex}" />
+		            		<button type="submit" name="status" th:if="${review.status} != 'approval'">권한허용</button>
+		            	</form>
+		            </td>
+		        </tr>
+	        </tbody>
+	    </table>
+		
+		
+	</div>	
+</body>
+</html>

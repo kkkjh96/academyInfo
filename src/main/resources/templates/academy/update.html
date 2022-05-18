@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학원 정보 수정</title>
+    <style>
+        
+    </style>
+    <script>
+        
+    </script>
+</head>
+<body>
+	<!-- layout -->
+    <div layout:fragment="content">
+	    <form th:action="@{'/academy/post/edit/' + ${academyDto.aindex}}" method="post">
+	        <input type="hidden" name="_method" value="put" />
+	        <input type="hidden" name="aindex" th:value="${academyDto.aindex}" />
+	        학원명 : <input type="text" name="name" th:value="${academyDto.name}"> <br>
+	        <input type="hidden" name="grade" th:value="${academyDto.grade}" />
+	        <input type="text" name="location" th:value="${academyDto.location}" />
+	        <input type="text" name="address" th:value="${academyDto.address}" />
+	        <input type="text" name="companynum" th:value="${academyDto.companynum}" />
+	        <input type="hidden" name="mindex" th:value="${academyDto.mindex}" />
+	        
+	        <textarea name="info" th:text="${academyDto.info}"></textarea> <br>
+	        
+	        <input type="submit" value="수정">
+	        <a th:href="@{/user/mypage}"><button>취소</button></a>
+	    </form>
+	<!-- layout end-->
+	</div>
+</body>
+</html>

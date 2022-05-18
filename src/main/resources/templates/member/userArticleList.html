@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+<meta charset="UTF-8">
+<title>나의 글 목록</title>
+<style>
+	table {
+		width:100%;
+		margin: 0;
+	}
+</style>
+</head>
+
+<body style="text-align:center">
+<div layout:fragment="content">
+	<div sec:authorize="hasRole('ROLE_ADMIN')">
+	<h1>내가 쓴 공지사항 목록입니다.</h1>
+	   <table>
+	        <thead>
+	            <!-- 게시판 분류-->
+	            <tr>
+	            	<th style="width:10%">번호</th>
+	                <th style="width:40%">제목</th>
+	                <th style="width:20%">작성일</th>
+	                <th style="width:20%">조회수</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        <!-- Contents -->
+	        <!-- 반복문으로 게시판 글을 반복해서 보여줌-->
+		    	<tr th:each="alertboard : ${alertboardList}">
+		    		<td>
+						<span th:text="${alertboard.abindex}"></span>
+					</td>
+		            <td>
+			            <a th:href="@{'/alertboard/post/' + ${alertboard.abindex}}">
+			                <span th:text="${alertboard.title}"></span>
+			            </a>
+		            </td>
+		            <td>
+		                <span th:text="${#temporals.format(alertboard.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+		            </td>
+		            
+		            <td>
+		                <span th:text="${#numbers.formatInteger(alertboard.count, 1)}"></span>
+		            </td>
+		        </tr>
+	        </tbody>
+	    </table>
+	</div>
+	<hr>
+	   <h1>내가 쓴 글 목록입니다.</h1>
+	   <table>
+	        <thead>
+	            <!-- 게시판 분류-->
+	            <tr>
+	            	<th style="width:10%">번호</th>
+	                <th style="width:40%">제목</th>
+	                <th style="width:20%">작성일</th>
+	                <th style="width:20%">조회수</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        <!-- Contents -->
+	        <!-- 반복문으로 게시판 글을 반복해서 보여줌-->
+		    	<tr th:each="freeboard : ${freeboardList}">
+		    		<td>
+						<span th:text="${freeboard.fbindex}"></span>
+					</td>
+		            <td>
+			            <a th:href="@{'/freeboard/post/' + ${freeboard.fbindex}}">
+			                <span th:text="${freeboard.title}"></span>
+			            </a>
+		            </td>
+		            <td>
+		                <span th:text="${#temporals.format(freeboard.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+		            </td>
+		            
+		            <td>
+		                <span th:text="${#numbers.formatInteger(freeboard.count, 1)}"></span>
+		            </td>
+		        </tr>
+	        </tbody>
+	    </table>
+	    <hr>
+	   <h1>내가 쓴 댓글 목록입니다.</h1>
+	   <table>
+	        <thead>
+	            <!-- 게시판 분류-->
+	            <tr>
+	            	<th style="width:10%">번호</th> 
+	            	<th style="width:35%">게시글 제목</th>
+	                <th style="width:35%">댓글 내용</th>
+	                <th style="width:20%">작성일</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        <!-- Contents -->
+	        <!-- 반복문으로 댓글을 반복해서 보여줌-->
+		    	<tr th:each="comment : ${commentList}">
+		    		<td>
+						<span th:text="${comment.fbindex}"></span>
+					</td>
+		            <td>
+			            <a th:href="@{'/freeboard/post/' + ${comment.fbindex}}">
+			                <span th:text="${comment.fbtitle}"></span>
+			            </a>
+		            </td>
+		            <td>
+		                <span th:text="${comment.comment}"></span>
+		            </td>
+		            
+		            <td>
+		                <span th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+		            </td>
+		        </tr>
+	        </tbody>
+	    </table>
+	    <hr>
+	    <h1>내가 쓴 수강후기 목록입니다.</h1>
+	   <table>
+	        <thead>
+	            <!-- 게시판 분류-->
+	            <tr>
+	            	<th style="width:30%">강의명</th>
+	                <th style="width:30%">수강후기</th>
+	                <th style="width:20%">평점</th>
+	                <th style="width:20%">작성일</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        <!-- Contents -->
+	        <!-- 반복문으로 댓글을 반복해서 보여줌-->
+		    	<tr th:each="review : ${reviewList}">
+		            <td>
+			            <a th:href="@{'/claco/post/' + ${review.cindex}}">
+			                <span th:text="${review.cname}"></span>
+			            </a>
+		            </td>
+		            <td>
+		                <span th:text="${review.contents}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${#numbers.formatDecimal(review.score, 1, 2)}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+		            </td>
+		        </tr>
+	        </tbody>
+	    </table>
+</div>
+</body>
+</html>

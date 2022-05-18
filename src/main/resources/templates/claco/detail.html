@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${classDto.name}"></title>
+    <style>
+        .list li {
+        	list-style: none;
+        }
+    </style>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+</head>
+<body>
+	<!-- layout -->
+    <div layout:fragment="content">
+    
+	    <!-- 기본 정보 출력-->
+	    <h2 th:text="${classDto.name}"></h2>
+	    <span th:text="${#numbers.formatDecimal(classDto.score, 1, 2)}"></span>
+	    <p th:text="${classDto.info}"></p>
+	    <!-- 기능 모음 -->
+	    <div>
+	    	<div sec:authorize="hasRole('ROLE_COMPANY')">
+		   		<a th:href="@{'/user/cpnClassList'}">
+		            <button>나의 강의</button>
+		        </a>
+	        	<a th:href="@{'/claco/search?keyword=&arr_location='}">
+		            <button>목록</button>
+		        </a>
+		        <div th:if="${isWriter}">
+			        <a th:href="@{'/claco/post/edit/' + ${classDto.cindex}}">
+			            <button>수정</button>
+			        </a>
+			
+			        <form id="delete-form" th:action="@{'/claco/post/' + ${classDto.cindex}}" method="post">
+			            <!-- controller에서는 delete로 매핑-->
+			            <input type="hidden" name="_method" value="delete" />
+			            <button id="delete-btn">삭제</button>
+			        </form>
+		        </div>
+	        </div>
+	        <div th:unless="${isWriter}">
+	        	<a th:href="@{'/claco/search?keyword=&arr_location='}">
+		            <button>목록</button>
+		        </a>
+		        <hr>
+		        <div th:if="${favorite} == 1">
+		        	<span th:text="${#numbers.formatInteger(favorite, 1)}" ></span>
+		        	<span>Favorite</span>
+		        </div>
+		        <div th:unless="${favorite} == 1">
+		        	<span th:text="${#numbers.formatInteger(favorite, 1)}"></span>
+		        	<span>Favorites</span>
+		        </div>
+		        <div th:if="${isLogin}">
+					<form th:action="@{'/favorite/post/' + ${classDto.cindex}}" method="post">
+						<input type="hidden" name="_method" value="put" />
+						<input type="hidden" id="cindex" th:value="${classDto.cindex}">
+						<button type="submit">즐겨찾기</button>
+					</form>
+				</div>
+	        </div>
+	    </div>
+	    <hr>
+	    <!-- 수강후기 -->
+	    <!-- 해당 강의 수강후기 리스트 -->
+	    <div th:if="${reviewCnt != 1}">
+	    	<p>[[${#numbers.formatInteger(reviewCnt, 1)}]] Reviews</p>
+	    </div>
+	    <div th:unless="${reviewCnt != 1}">
+	    	<p>[[${#numbers.formatInteger(reviewCnt, 1)}]] Review</p>
+	    </div>
+	    <div th:if="${reviewCnt} > 0">
+	    	<ul class="list">
+	    		<li th:each="rv : ${reviews}">
+	    			<span>
+	    				<span th:text="${rv.mid}"></span>
+	    				<span th:text="${#temporals.format(rv.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+	    				<span th:text="${#numbers.formatDecimal(rv.score, 1, 2)}"></span>
+	    			</span>
+	    			 
+	    			<div th:if="${rv.mid.toString().equals(loginUser)}">
+	    			
+	    			<!-- 수강후기 수정 버튼 
+	    			<a type="button" data-toggle="collapse" th:data-target="multi-collapse-${rv.rvindex}">수정</a>
+	    			-->
+	    			<!-- 수강후기 삭제 버튼 -->
+	    				<a type="button" th:onclick="'main.reviewDelete(' + ${classDto.cindex}+ ',' + ${rv.rvindex}+ ');'">삭제</a>
+	    			</div>
+	    			<span th:text="${rv.contents}"></span>
+	    			
+	    			<!-- 수강후기 수정 시 박스 표시
+	    			<div th:if="${isLogin}">
+				    	<form>
+				    		<input type="hidden" id="rvindex" th:value="${rv.rvindex}">
+					    	<input type="hidden" id="classidModify" th:value="${classDto.cindex}">
+					    	<div>
+					    		<textarea id="comment-content" rows="3" >[[${rv.contents}]]</textarea>
+					    	</div>
+					    	<div>
+					    		<button type="button" id="btn-review-update">수정</button>
+				    		</div>
+				    	</form>
+			    	</div>
+			    	 -->
+			    	 <div th:if="${isLogin}">
+						<form th:action="@{'/claco/post/' + ${classDto.cindex} + '/report/' + ${rv.rvindex}}" method="post">
+							<input type="hidden" name="_method" value="put" /> 
+							<button type="submit">신고</button>
+						</form>
+					</div>
+	    		</li>
+	    	</ul>
+	    </div>
+	    <div>
+	    	<!-- 댓글 작성 부분 구현 -->
+	    	<!-- ajax 사용 -->
+	    	<div th:if="${isLogin} and ${!isWriter}">
+		    	<form>
+			    	<input type="hidden" id="classid" th:value="${classDto.cindex}">
+			    	<input type="hidden" id="status" value="limited">
+			    	<input type="text" id="score" placeholder="평점을 입력하세요.">
+			    	<div>
+			    		<textarea id="contents" rows="4" placeholder="수강후기를 입력하세요."></textarea>
+			    	</div>
+			    	<div>
+			    		<button type="button" id="btn-review-save">등록</button>
+		    		</div>
+		    	</form>
+	    	</div>
+	    	<div th:unless="${isLogin}">
+	    		<p><a th:href="@{'/user/login/'}">로그인</a>을 하시면 수강후기를 등록할 수 있습니다.</p>
+	    	</div>
+	    </div>
+	    
+	    <!-- 변수 선언 방식 : ~~~ /*<![CDATA[*/ ~~~ /*]]>*/-->
+	    <script th:inline="javascript">
+	        /*<![CDATA[*/
+	        var classDto = /*[[${classDto}]]*/"";
+	        /*]]>*/
+	    </script>
+	    
+	    <!-- ajax 사용을 위한 js -->
+	    <script th:inline="javascript" th:src="@{/js/ajaxSettingReview.js}">
+	
+	    </script>
+    </div>
+</body>
+</html>

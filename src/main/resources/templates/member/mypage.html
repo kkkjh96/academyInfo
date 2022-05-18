@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <style>
+    	li {
+    		list-style:none;
+    	}
+    </style>
+</head>
+<body style="text-align:center">
+<div layout:fragment="content">
+    <h1> 마이페이지입니다.</h1>
+    <hr>
+    <ul>
+    	<li sec:authorize="isAuthenticated()"><a th:href="@{/user/userArticleList}">내가 쓴 글</a></li>
+		<li sec:authorize="hasRole('ROLE_MEMBER')"><a th:href="@{/favorite/userClassList}">나의 강의목록</a></li>
+		<li sec:authorize="hasRole('ROLE_COMPANY')"><a th:href="@{/user/cpnClassList}">등록강의</a></li>
+		<li><a th:href="@{/user/info}">회원정보수정</a></li>    
+    </ul>
+</div> 
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+<meta charset="UTF-8">
+<title>검색 결과</title>
+<style>
+	.resize_img {
+		max-width:100px;
+		max-height:100px;
+	}
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<table border="1" align="center" width="80%">
+	        <tr align="center" bgcolor="lightgreen">
+	            <td><b>사진</b></td>
+	            <td><b>강의명</b></td>
+	            <td><b>키워드</b></td>
+	            <td><b>강의기간(시작)</b></td>
+	            <td><b>강의기간(끝)</b></td>
+	            <td><b>강의평점</b></td>
+	            <td><b>금액</b></td>
+	            <td><b>학원</b></td>
+	            <td><b>지역</b></td>
+	        </tr>
+	        <tr align="center" th:each = "listFilter : ${listFilter}" th:if="${listFilter.status} == 'approval'" >
+	            <td ><img class="resize_img" src = "/img/사진1.jpg" alt="이미지" ></td>
+	            <td>
+	            	<a th:href="@{'/claco/post/' + ${listFilter.cindex}}" >
+	            		<span th:text ="${listFilter.name}"></span>
+	            	</a>
+	            </td>
+	            <td th:text ="${listFilter.category}"></td>
+	            <td th:text ="${listFilter.startperiod}"></td>
+	            <td th:text ="${listFilter.endperiod}"></td>
+	            <td th:text ="${#numbers.formatDecimal(listFilter.score, 1, 2)}"></td>
+	            <td th:text ="${#numbers.formatInteger(listFilter.price, 1)}"></td>
+	            <td th:text ="${listFilter.aname}"></td>
+	            <td th:text ="${listFilter.alocation}"></td>
+	        </tr>
+    	</table>
+    </div>
+</body>
+</html>

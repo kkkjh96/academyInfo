@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새 강의 등록하기</title>
+    <style>
+        
+    </style>
+    <script>
+        
+    </script>
+</head>
+<body>
+	<!-- layout -->
+    <div layout:fragment="content">
+	    <!-- <form action="/claco/post" method="post"> -->
+	    <form th:action="@{'/claco/post/' + ${aindex}}" method="post">
+	    	<!--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> -->
+	    	<!-- <input type="hidden" name="a" value="${aindex}">  -->
+	        강의명 : <input type="text" name="name"> <br>
+	       	분야 : <input type="text" name="category"> <br>
+	       	금액 : <input type="text" name="price"> <br>
+	       	강의기간(시작) : <input type="text" name="startperiod"> <br>
+	       	강의기간(끝) : <input type="text" name="endperiod"> <br>
+	       	정보 : <textarea name="info"></textarea> <br>
+	       	<input type="hidden" name="status" value="limited">
+	       	<input type="hidden" name="iindex" value="1">
+	        <input type="submit" value="등록">
+	        <a th:href="@{/user/cpnClassList}"><button type="button">취소</button></a>
+	    </form>    
+    <!-- layout end-->
+	</div>
+</body>
+</html>

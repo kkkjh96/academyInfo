@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${academyDto.name}"></title>
+    <style>
+        .list li {
+        	list-style: none;
+        }
+    </style>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+</head>
+<body>
+	<!-- layout -->
+	<div layout:fragment="content">
+	    <!-- 기본 정보 출력-->
+	    <h2 th:text="${academyDto.name}"></h2>
+	    <p class="medal" >
+			<span th:if ="${academyDto.grade} >= 4000">
+				<span>마스터</span>
+      		</span>
+      		<span th:if ="${academyDto.grade} >= 3000 and ${academyDto.grade} < 4000">
+      			<span>플래티넘</span>
+         	</span>
+        		<span th:if ="${academyDto.grade} >= 2000 and ${academyDto.grade} < 3000">
+        			<span>골드</span>
+        		</span>
+        		<span th:if ="${academyDto.grade} >= 1000 and ${academyDto.grade} < 2000">
+        			<span>실버</span>
+        		</span>
+        		<span th:if ="${academyDto.grade} >= 0 and ${academyDto.grade} < 1000">
+        			<span>브론즈</span>
+        		</span>
+		</p>
+		
+		<span th:text="'주소 : ' + ${academyDto.address}"></span>
+		
+		<span th:text="'사업자등록번호 : ' + ${academyDto.companynum}"></span>
+	    
+	    <p th:text="${academyDto.info}"></p>
+	    
+	    
+	    
+	    <!-- 기능 모음 -->
+	    <div>
+		    <div sec:authorize="hasRole('ROLE_COMPANY')">
+		   		<a th:href="@{'/user/cpnClassList'}">
+		            <button>나의 학원</button>
+		        </a>
+		        <a th:href="@{'/claco/search?keyword=&arr_location='}">
+			        <button>목록</button>
+			    </a>
+		        <div th:if="${isWriter}">
+			        <a th:href="@{'/academy/post/edit/' + ${academyDto.aindex}}">
+			            <button>수정</button>
+			        </a>
+			
+			        <form id="delete-form" th:action="@{'/academy/post/' + ${academyDto.aindex}}" method="post">
+			            <!-- controller에서는 delete로 매핑-->
+			            <input type="hidden" name="_method" value="delete" />
+			            <button id="delete-btn">삭제</button>
+			        </form>
+		        </div>
+		        <div th:unless="${isWriter}">
+		        	<a th:href="@{'/claco/search?keyword=&arr_location='}">
+			            <button>목록</button>
+			        </a>
+		        </div>
+	        </div>
+	    </div>
+	    
+	    <!-- 강의 -->
+	    <!-- 해당 학원의 강의 리스트 -->
+	    <div th:if="${classesCnt != 1}">
+	    	<p>[[${#numbers.formatInteger(classesCnt, 1)}]] Classes</p>
+	    </div>
+	    <div th:unless="${classesCnt != 1}">
+	    	<p>[[${#numbers.formatInteger(classesCnt, 1)}]] Class</p>
+	    </div>
+	    <div th:if="${classesCnt} > 0">
+	    	<ul class="list">
+	    		<li th:each="cls : ${classes}">
+	    			<span>
+	    				<a th:href="@{'/claco/post/' + ${cls.cindex}}" >
+	    					<p th:text="${cls.name}"></p>
+	    				</a>
+	    				<p th:text="'시작 : ' + ${cls.startperiod}"></p>
+	    				<p th:text="'종료 : ' + ${cls.endperiod}"></p>
+	    			</span>
+	    			<span th:text="${cls.info}"></span>
+	    		</li>
+	    	</ul>
+	    </div>
+	    <form th:action="@{'/claco/add/' + ${academyDto.aindex}}" method="get">
+	    	<button type="submit">강의 등록</button>
+	    </form>
+	    
+	    <!-- 변수 선언 방식 : ~~~ /*<![CDATA[*/ ~~~ /*]]>*/-->
+	    <script th:inline="javascript">
+	        /*<![CDATA[*/
+	        var academyDto = /*[[${academyDto}]]*/"";
+	        /*]]>*/
+	    </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 목록</title>
+    <link rel="stylesheet" href="css/clacoReview.css">
+    <script>
+        
+    </script>
+</head>
+<body>
+
+	<!-- layout -->
+    <div layout:fragment="content">
+	    <!-- Body -->
+		<h1><a href="/claco/review/list">수강후기</a></h1>
+		<div class="card_wrapper" th:each = "review : ${listReview}" th:if="${review.status} == 'approval'">
+			<div class="card__inner" >
+				<div class="card__content">
+					<div class="card_header">
+						<div class ="card_header_profile">
+							<div class ="card_header_profile_info_name" th:text ="${review.mid}"></div>
+							<div class ="card_header_profile_info_date" th:text ="${#temporals.format(review.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
+						</div>
+						<div class="card_header_rating">
+							<span class = "ration_count" th:text = "${#numbers.formatDecimal(review.score, 1, 2)}"></span>
+						</div>
+					</div>
+					<div class="card_academy">
+					<!-- 
+						<div class="card_academy_info" th:each ="imagefile : ${listImg}" th:if ="${class.iindex} == ${imagefile.iindex}">
+							<div class="card_academy_info_logo"><img th:src = "@{/img/} + ${imagefile.name} +.jpg" alt="학원로고"></div>
+							<div class="card_academy_info_name"><a href="#" th:text = "${review.cname}"></a></div>
+						</div>
+						-->
+						<div class="card_academy_info_name"><a th:href="@{'/claco/post/' + ${review.cindex}}" th:text = "${review.cname}"></a></div>
+					</div>
+					<div class="card_content" th:text = "${review.contents}"></div>
+				</div>
+			</div>
+		</div>
+    </div>
+    
+</body>
+</html>
