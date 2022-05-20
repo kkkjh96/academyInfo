@@ -56,6 +56,6 @@ public class IndexController {
 		/*수강후기*/
 		model.addAttribute("listReview", listReview);
 		
-        return "/index";
+        return "/index.html";
     }
 }
